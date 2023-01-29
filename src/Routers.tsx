@@ -17,50 +17,31 @@ const Profile = React.lazy( () => import( './pages/profile' ) );
 const NotFound = React.lazy( () => import( './pages/NotFound' ) );
 const Guard = React.lazy( () => import( './pages/Guard' ) );
 
-const Routers = createBrowserRouter( [
-  {
-    path: "/",
-    element: <Navigate to={ "/home" } />
 
-  },
-  {
-    path: "/home",
-    element: <Home />
-  },
-  {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    element: <Guard canActivated={ [ CheckUser ] } />,
-    children: [
-      {
-        path: "/books",
-        element: <Books />,
-        children: [
-          {
-            path: ":id",
-            element: <BookView />
-          }
-        ]
-      },
-    ]
-  },
-  {
-    element: <Guard canActivated={ [ CheckUser, CheckPermision( "Add" ) ] } />,
-    children: [
-      {
-        path: "/profile",
-        element: <Profile />
-      }
-    ]
-  },
-  {
-    path: "*",
-    element: <NotFound />
-  }
 
-] )
 
+
+const Routers = () => {
+
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={ <Navigate to={ "/home" } /> } />
+        <Route path="/home" element={ <Home /> } />
+        <Route path="/login" element={ <Login /> } />
+
+        <Route element={ <Guard canActivated={ [ CheckUser ] } /> } >
+          <Route path="books" element={ <Books /> } >
+            <Route path=":id" element={ <BookView /> } />
+          </Route>
+        </Route>
+        <Route element={ <Guard canActivated={ [ CheckUser, CheckPermision( "Add" ) ] } /> } >
+          <Route path="/profile" element={ <Profile /> } />
+        </Route>
+        <Route path="*" element={ <NotFound /> } />
+      </Routes>
+    </Router >
+  )
+}
 
 export default Routers;
